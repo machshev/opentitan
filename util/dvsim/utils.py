@@ -25,7 +25,7 @@ from premailer import transform
 VERBOSE = 15
 
 # Timestamp format when creating directory backups.
-TS_FORMAT = "%y.%m.%d_%H.%M.%S"
+TS_FORMAT = "%Y%m%d_%H%M%S"
 
 # Timestamp format when generating reports.
 TS_FORMAT_LONG = "%A %B %d %Y %H:%M:%S UTC"
@@ -76,6 +76,11 @@ def run_cmd_with_timeout(cmd, timeout=-1, exit_on_failure=1):
             sys.exit(status)
 
     return (result, status)
+
+
+def git_commit_hash() -> str:
+    """Hash of the current git commit"""
+    return run_cmd("git rev-parse HEAD")
 
 
 # Parse hjson and return a dict
@@ -595,7 +600,15 @@ def clean_odirs(odir, max_odirs, ts_format=TS_FORMAT):
     directories at the base of input arg 'odir' with the oldest timestamps,
     if that limit is reached. It returns a list of directories that
     remain after deletion.
+
+    NOTE: this can cause misleading results as the timestamp is the time
+    of archive and not the time of run. It would be better to migrate to
+    creating odirs with time of creation timestamps, or find a better
+    strategy altogether.
     """
+    # TODO: This function and it's behaviour should be removed. Leaving it for
+    # the moment to reduce refactor scope as it's used outside the results dir.
+    # however the effect is probably equally dangerous wherever it's used.
 
     odir = Path(odir)
 
@@ -631,10 +644,11 @@ def check_bool(x):
     """
     if isinstance(x, bool):
         return x
-    if not x.lower() in ["true", "false"]:
+
+    if x.lower() not in ("true", "false"):
         raise RuntimeError("{} is not a boolean value.".format(x))
-    else:
-        return (x.lower() == "true")
+
+    return x.lower() == "true"
 
 
 def check_int(x):
