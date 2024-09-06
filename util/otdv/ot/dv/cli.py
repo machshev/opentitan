@@ -45,9 +45,18 @@ def pull() -> None:
     # TODO: download a subset of the run results from a google bucket
 
 
-@cli.command()
+@cli.group()
 def report() -> None:
-    """Generate reports."""
+    """DV reports."""
+
+
+@report.command()
+def gen() -> None:
+    """Generate a DV report"""
+    from ot.dv.report.generate import generate_report
+
+    generate_report()
+
     # TODO: Parse the dv run artefacts and generate a report from them
     # TODO: Generate a summary
 
