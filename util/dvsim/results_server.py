@@ -15,10 +15,17 @@ from shutil import which
 from typing import List, Optional
 
 
-class NoGCPError(Exception):
-    """Exception to represent "GCP tools are not installed"."""
+class NoRCloneError(Exception):
+    """Exception to represent "rclone tools are not installed"."""
 
     pass
+
+
+def rclone_sync(src: str, dest: str) -> None:
+    """Run rclone sync to sync the src files to dest."""
+    if which('rclone') is None:
+        raise NoRCloneError()
+
 
 
 class ResultsServer:

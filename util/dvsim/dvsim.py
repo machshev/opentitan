@@ -37,6 +37,7 @@ import SgeLauncher
 from CfgFactory import make_cfg
 from Deploy import RunTest
 from Timer import Timer
+from results_server import ResultsServer
 from utils import (TS_FORMAT, TS_FORMAT_LONG, VERBOSE, rm_path,
                    run_cmd_with_timeout)
 
@@ -769,7 +770,10 @@ def main():
 
         # Publish results
         if args.publish:
-            cfg.publish_results()
+            rclone_sync(
+                src=cfg.results_dir_base,
+                dest=cfg.results_server,
+            )
 
     else:
         log.error("Nothing to run!")

@@ -152,8 +152,8 @@ class FlowCfg():
         self.results_html_name = f"{self.timestamp}.html"
 
         # Construct the path variables after variable expansion.
-        self._results_dir_base = Path(self.scratch_base_path) / "reports"
-        self.results_dir = self._results_dir_base / commit_id / self.rel_path
+        self.results_dir_base = Path(self.scratch_base_path) / "reports"
+        self.results_dir = self.results_dir_base / commit_id / self.rel_path
         self.results_page = self.results_dir / self.results_html_name
 
         tmp_path = (
@@ -451,8 +451,8 @@ class FlowCfg():
 
             # Update the top level latest.html redirect
             gen_html_redirect_file(
-                file_path=self._results_dir_base / "latest.html",
-                url=self.results_page.relative_to(self._results_dir_base),
+                file_path=self.results_dir_base / "latest.html",
+                url=self.results_page.relative_to(self.results_dir_base),
             )
 
     def gen_results_summary(self):
